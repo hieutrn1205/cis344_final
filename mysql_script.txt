@@ -1,0 +1,78 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`students`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`students` (
+  `studentId` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `studentName` VARCHAR(45) NOT NULL,
+  `enrolledInCourseID` INT NULL DEFAULT 1,
+  `grade` FLOAT NOT NULL,
+  PRIMARY KEY (`studentId`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`courses`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `mydb`.`courses` (
+  `courseId` INT NOT NULL AUTO_INCREMENT,
+  `courseName` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`courseId`),
+  UNIQUE INDEX `courseId_UNIQUE` (`courseId` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+use teachers_portal;
+
+select * from students;
+
+
+insert into students(studentName, enrolledInCourse, grade)
+values ("Maria Jozef", 1, 98),
+		("Linda Jones", 2, 89),
+        ("John McGrail", 1, 98),
+        ("Patty Luna", 2, 78);
+        
+insert into courses(courseName)
+values ("Database Design"),
+		("Calcuslus"),
+        ("Physics I");
+select * from courses;
+
+
+
+delimiter //
+DROP PROCEDURE IF EXISTS studentWithGrade;
+
+CREATE PROCEDURE studentWithGrade()
+BEGIN
+	SELECT * FROM students LEFT JOIN courses
+    ON students.enrolledInCourseID = courses.courseID;
+END//
+
+DROP PROCEDURE IF EXISTS showStudent;
+
+CREATE PROCEDURE showStudent(IN stu_id INT)
+BEGIN
+	SELECT * FROM students where studentId = stu_id;
+END//
+
+delimiter ;
